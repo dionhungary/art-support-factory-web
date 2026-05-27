@@ -8,6 +8,5 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  site: 'https://diohungary.github.io',
-  base: '/art-support-factory-web',
+  site: 'https://artsupportfactory.hu',
 });
