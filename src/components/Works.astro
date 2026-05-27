@@ -554,6 +554,7 @@ const initialWork = worksClientData[0];
             let startY = 0;
             let dragOffset = 0;
             let suppressClick = false;
+            let didDrag = false;
 
             const getVisibleCount = () => {
                 if (window.matchMedia('(min-width: 1024px)').matches) {
@@ -618,6 +619,7 @@ const initialWork = worksClientData[0];
                 startY = event.clientY;
                 dragOffset = 0;
                 suppressClick = false;
+                didDrag = false;
 
                 carousel.setPointerCapture(pointerId);
                 track.style.transition = 'none';
@@ -636,7 +638,7 @@ const initialWork = worksClientData[0];
                 }
 
                 dragOffset = deltaX;
-                suppressClick = suppressClick || Math.abs(dragOffset) > 10;
+                didDrag = didDrag || Math.abs(dragOffset) > 10;
 
                 const visibleCount = getVisibleCount();
                 const maxIndex = Math.max(items.length - visibleCount, 0);
@@ -653,8 +655,11 @@ const initialWork = worksClientData[0];
                 }
 
                 isDragging = false;
-                carousel.releasePointerCapture(pointerId);
+                if (carousel.hasPointerCapture(pointerId)) {
+                    carousel.releasePointerCapture(pointerId);
+                }
                 pointerId = null;
+                suppressClick = didDrag;
 
                 const threshold = 50;
                 const step = getVisibleCount();
@@ -669,6 +674,12 @@ const initialWork = worksClientData[0];
 
                 dragOffset = 0;
                 updateCarousel();
+
+                if (suppressClick) {
+                    requestAnimationFrame(() => {
+                        suppressClick = false;
+                    });
+                }
             };
 
             previousButton.addEventListener('click', () => {
