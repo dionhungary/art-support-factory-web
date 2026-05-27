@@ -6,9 +6,46 @@ import Features from "../components/Features.astro"
 import Works from "../components/Works.astro"
 import Technology from "../components/Technology.astro"
 import Contact from "../components/Contact.astro"
+import HeroImage from "../assets/hero_01.png"
+
+const pageTitle = "Art Support Factory | Custom-Built Visual Solutions"
+const pageDescription = "Art Support Factory designs and manufactures film environments, exhibition structures, POS solutions and custom-built visual installations with 3D printing, CNC machining, digital printing and finishing."
+const organizationSchema = {
+	"@context": "https://schema.org",
+	"@type": "Organization",
+	name: "Art Support Factory",
+	url: "https://artsupportfactory.hu/",
+	logo: "https://artsupportfactory.hu/favicon.svg",
+	email: "info@artsupportfactory.hu",
+	telephone: "+36 30 650 3622",
+	sameAs: [
+		"https://www.instagram.com/artsupportfactory",
+	],
+	contactPoint: [
+		{
+			"@type": "ContactPoint",
+			contactType: "customer support",
+			email: "info@artsupportfactory.hu",
+			telephone: "+36 30 650 3622",
+			availableLanguage: ["en", "hu"],
+		},
+		{
+			"@type": "ContactPoint",
+			contactType: "sales",
+			email: "david@artsupportfactory.hu",
+			telephone: "+36 20 315 2572",
+			availableLanguage: ["en", "hu"],
+		},
+	],
+}
 ---
 
-<MainLayout title="Art Support Factory">	
+<MainLayout
+	title={pageTitle}
+	description={pageDescription}
+	ogImage={HeroImage}
+	schema={organizationSchema}
+>	
 	
 	<HeroSlider />
 	<AboutUs />

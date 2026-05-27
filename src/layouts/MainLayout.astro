@@ -1,6 +1,11 @@
 ---
-const { title } = Astro.props;
-const { style } = Astro.props;
+const {
+	title,
+	description = 'Art Support Factory is a creative fabrication studio specializing in film environments, exhibition structures, POS solutions and custom-built visual installations.',
+	ogImage,
+	noindex = false,
+	schema,
+} = Astro.props;
 import '../styles/global.css';
 import '../styles/light.min.css';
 import '../styles/brands.min.css';
@@ -8,6 +13,28 @@ import '../styles/all.min.css';
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import Diamond from '../assets/diamond.svg'
+
+const siteUrl = 'https://artsupportfactory.hu';
+const basePath = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+const normalizedPathname = Astro.url.pathname.startsWith(basePath) && basePath !== ''
+	? Astro.url.pathname.slice(basePath.length) || '/'
+	: Astro.url.pathname;
+const path = normalizedPathname === '/' ? '/' : normalizedPathname.replace(/\/$/, '');
+const canonical = new URL(path, siteUrl).toString();
+const ogImagePath = ogImage
+	? typeof ogImage === 'string'
+		? ogImage
+		: ogImage.src
+	: '/favicon.svg';
+const normalizedOgImagePath = ogImagePath.startsWith(basePath) && basePath !== ''
+	? ogImagePath.slice(basePath.length) || '/'
+	: ogImagePath;
+const resolvedOgImage = ogImage
+	? new URL(normalizedOgImagePath, siteUrl).toString()
+	: `${siteUrl}/favicon.svg`;
+const robotsContent = noindex
+	? 'noindex, nofollow'
+	: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 ---
 
 <html lang="en" class="bg-neutral-900">
@@ -17,7 +44,27 @@ import Diamond from '../assets/diamond.svg'
 		<link rel="icon" href="/art-support-factory-web/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<meta name="robots" content={robotsContent} />
+		<meta name="theme-color" content="#171717" />
+		<link rel="canonical" href={canonical} />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Art Support Factory" />
+		<meta property="og:locale" content="en_US" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={resolvedOgImage} />
+
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={resolvedOgImage} />
 		<title>{title}</title>
+		{schema && (
+			<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+		)}
 	</head>
 	<body class="px-4">
 		<Diamond class="fixed hidden xl:block top-0 right-0 transform-[translateX(50%)] pointer-events-none max-w-2xl" style="width: calc((100vw - var(--container-6xl)));" />
