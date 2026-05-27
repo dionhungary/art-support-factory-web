@@ -1,0 +1,144 @@
+---
+import { Image } from 'astro:assets'
+
+const {
+    id,
+    slides = [],
+    intervalMs = 3000,
+    class: rootClass = '',
+    overlayClass = '',
+    imageClass = '',
+    navClass = '',
+    navItemClass = ''
+} = Astro.props
+
+const sliderId = id ?? `image-slider-${crypto.randomUUID()}`
+const hasMultipleSlides = slides.length > 1
+---
+
+<div
+    id={sliderId}
+    data-image-slider
+    class:list={[
+        'image-slider relative overflow-hidden',
+        rootClass
+    ]}
+>
+    <div class="image-slider-track absolute inset-0 z-0">
+        {slides.map((slide, index) => (
+            <Image
+                src={slide.src}
+                alt={slide.alt ?? `Slider image ${index + 1}`}
+                class:list={[
+                    'image-slider-slide absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-in-out',
+                    imageClass,
+                    index === 0 && 'is-active'
+                ]}
+                data-slide
+                data-slide-index={index}
+                loading={index === 0 ? 'eager' : 'lazy'}
+                aria-hidden={index === 0 ? 'false' : 'true'}
+            />
+        ))}
+    </div>
+
+    <div class:list={['image-slider-overlay relative z-1', overlayClass]}>
+        <slot />
+    </div>
+
+    {hasMultipleSlides && (
+        <div class:list={['image-slider-nav absolute bottom-4 z-2 flex w-full justify-center', navClass]}>
+            {slides.map((slide, index) => (
+                <div
+                    class:list={[
+                        'image-slider-nav-item h-[10px] w-[10px] cursor-pointer bg-red-600 transition-all hover:bg-white',
+                        navItemClass,
+                        index === 0 && 'is-active'
+                    ]}
+                    data-slide-nav
+                    data-slide-index={index}
+                    role="button"
+                    tabindex="0"
+                    aria-label={slide.alt ?? `Show slider image ${index + 1}`}
+                    aria-pressed={index === 0 ? 'true' : 'false'}
+                ></div>
+            ))}
+        </div>
+    )}
+</div>
+
+<script define:vars={{ sliderId, intervalMs }}>
+    const slider = document.getElementById(sliderId);
+
+    if (slider && slider.dataset.initialized !== 'true') {
+        slider.dataset.initialized = 'true';
+
+        const slides = Array.from(slider.querySelectorAll('[data-slide]'));
+        const navItems = Array.from(slider.querySelectorAll('[data-slide-nav]'));
+        let activeIndex = 0;
+        let rotationId;
+
+        const setActiveSlide = (nextIndex) => {
+            activeIndex = nextIndex;
+
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('is-active', index === activeIndex);
+                slide.setAttribute('aria-hidden', index === activeIndex ? 'false' : 'true');
+            });
+
+            navItems.forEach((navItem, index) => {
+                navItem.classList.toggle('is-active', index === activeIndex);
+                navItem.setAttribute('aria-pressed', index === activeIndex ? 'true' : 'false');
+            });
+        };
+
+        const startRotation = () => {
+            if (slides.length <= 1) {
+                return;
+            }
+
+            rotationId = window.setInterval(() => {
+                const nextIndex = (activeIndex + 1) % slides.length;
+                setActiveSlide(nextIndex);
+            }, intervalMs);
+        };
+
+        const resetRotation = () => {
+            window.clearInterval(rotationId);
+            startRotation();
+        };
+
+        navItems.forEach((navItem, index) => {
+            navItem.addEventListener('click', () => {
+                setActiveSlide(index);
+                resetRotation();
+            });
+
+            navItem.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    setActiveSlide(index);
+                    resetRotation();
+                }
+            });
+        });
+
+        setActiveSlide(0);
+        startRotation();
+    }
+</script>
+
+<style>
+    .image-slider-slide {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .image-slider-slide.is-active {
+        opacity: 1;
+    }
+
+    .image-slider-nav-item.is-active {
+        background: white;
+    }
+</style>

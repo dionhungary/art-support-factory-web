@@ -1,0 +1,21 @@
+---
+import { Image } from 'astro:assets'
+import AboutImage1 from '../assets/royal.jpg'
+import AboutImage2 from '../assets/vehicle.jpg'
+---
+
+<section id="about-us" class="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+    <div class="w-full flex-grow">
+        <h2>Welcome to the<br /><span class="text-red-600">ASF Era</span></h2>
+        <p>Art Support Factory is a creative fabrication studio specializing in film environments, exhibition structures, POS solutions and custom-built visual installations.</p>
+        <p>By combining 3D design, engineering expertise and advanced manufacturing technologies, we transform complex creative concepts into fully realized physical experiences:, from large-scale movie sets and branded environments to unique decorative elements.</p>
+    </div>
+    <div class="flex w-full gap-4 md:gap-8">
+        <div class="chamfer-md w-1/3">
+            <Image src={AboutImage1} alt="Royal LED illuminated gate" class="object-cover h-full w-full transition-all lg:hover:transform-[scale(1.07)] duration-450" loading="eager" />
+        </div>
+        <div class="chamfer-md w-2/3">
+            <Image src={AboutImage2} alt="Futuristic vehicle" class="object-cover h-full w-full transition-all lg:hover:transform-[scale(1.07)] duration-450" loading="eager" />
+        </div>
+    </div>
+</section>

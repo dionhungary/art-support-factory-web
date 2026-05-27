@@ -1,0 +1,35 @@
+---
+import ImageSlider from '../components/ImageSlider.astro'
+
+import Slide1 from '../assets/hero_01.png'
+import Slide2 from '../assets/hero_02.png'
+import Slide3 from '../assets/hero_03.png'
+import Slide4 from '../assets/hero_04.png'
+
+const slides = [
+    { src: Slide1, alt: 'Hero slide 1' },
+    { src: Slide2, alt: 'Hero slide 2' },
+    { src: Slide3, alt: 'Hero slide 3' },
+    { src: Slide4, alt: 'Hero slide 4' }
+]
+---
+
+<section id="hero">
+    <ImageSlider
+        id="hero-slider"
+        slides={slides}
+        intervalMs={3000}
+        class="flex flex-col h-100 w-full chamfer-xl items-start]"
+        overlayClass="flex h-full w-full items-start"
+        navClass="bottom-4"
+        navItemClass="mx-[5px]"
+    >
+        <div class="flex flex-col w-full md:w-1/2 h-full p-8 pl-0 bg-linear-to-r from-neutral-900 from-10% to-60% md:to-100% justify-center items-start relative z-1">
+            <h2 class="text-red-600 mb-0">Specializing in</h2>
+            <h1 class="text-white">
+                Custom-Built Visual Solutions
+            </h1>
+            <a href="/#contact" class="button chamfer-sm">Contact Us</a>
+        </div>
+    </ImageSlider>
+</section>

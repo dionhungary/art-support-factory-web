@@ -1,0 +1,301 @@
+---
+import { Image } from 'astro:assets'
+import Technology3dPrinting from '../assets/technology_3d_printing.jpg'
+import TechnologyLights from '../assets/technology_lights.jpg'
+import TechnologyFinishing from '../assets/technology_finishing.jpg'
+import TechnologyPlastic from '../assets/technology_plastic_forming.jpg'
+import TechnologyCnc from '../assets/technology_cnc.jpg'
+import TechnologyPrint from '../assets/technology_print.jpg'
+
+const technologyCarouselId = `technology-carousel-${crypto.randomUUID()}`;
+const technologyNavLeftId = `technology-nav-left-${crypto.randomUUID()}`;
+const technologyNavRightId = `technology-nav-right-${crypto.randomUUID()}`;
+
+const technologies = [
+    {
+        title: 'Large format 3d printing',
+        alt: '3D printing',
+        image: Technology3dPrinting,
+        description: 'Industrial-scale additive manufacturing for oversized custom structures and props.',
+        features: [
+            'Up to 1800 x 1500 x 1500 mm build',
+            'Lightweight constructions',
+            'Complex custom geometries',
+            'Rapid prototyping & production',
+        ],
+    },
+    {
+        title: 'CNC & Machining',
+        alt: 'CNC & Machining',
+        image: TechnologyCnc,
+        description: 'Precision cutting and milling for wood, plastics and composite materials.',
+        features: [
+            'Up to 2000 x 3000 mm work area',
+            'CNC routing & engraving',
+            'Precision fabrication',
+            'Custom structural components',
+        ],
+    },
+    {
+        title: 'Plastic Forming',
+        alt: 'Plastic Forming',
+        image: TechnologyPlastic,
+        description: 'Thermoforming and plastic shaping for custom installations and parts.',
+        features: [
+            'Vacuum forming up to 680 x 480 mm',
+            'Acrylic & PET-G bending',
+            'Heat forming technologies',
+            'Custom mold production',
+        ],
+    },
+    {
+        title: 'Digital Printing',
+        alt: 'Digital Printing',
+        image: TechnologyPrint,
+        description: 'High-resolution printing for rigid and flexible surfaces.',
+        features: [
+            'Up to 3040 mm print width',
+            'UV flatbed & roll-to-roll printing',
+            'Indoor & outdoor graphics',
+            'High-detail color reproduction',
+        ],
+    },
+    {
+        title: 'Lighting & Electronics',
+        alt: 'Lighting & Electronics',
+        image: TechnologyLights,
+        description: 'Integrated lighting systems and motion-controlled installations.',
+        features: [
+            '5V / 12V / 24V systems',
+            'Programmable LED integration',
+            'Motors & movement control',
+            'Interactive electronic solutions',
+        ],
+    },
+    {
+        title: 'Finishing & Assembly',
+        alt: 'Finishing & Assembly',
+        image: TechnologyFinishing,
+        description: 'Complete post-processing and installation-ready production.',
+        features: [
+            'Painting & surface coating',
+            'Assembly & integration',
+            'Testing & quality control',
+            'On-site installation support',
+        ],
+    },
+];
+---
+
+<section id="technology">
+    <div class="flex flex-col flex-grow">
+        <div class="flex chamfer-sm items-center mb-6">
+            <h2 class="mb-0 flex-grow">Technology</h2>
+            <div class="flex gap-4">
+                <button
+                    id={technologyNavLeftId}
+                    class="group button chamfer-sm disabled:pointer-events-none p-[1px] bg-red-600 disabled:bg-neutral-700 hover:bg-white"
+                    type="button"
+                    aria-label="Show previous technologies"
+                    aria-controls={technologyCarouselId}
+                >
+                    <div class="button-inner bg-neutral-900 block w-[40px] h-[40px] chamfer-sm leading-[40px] text-red-600 group-hover:text-white group-disabled:text-neutral-700 transition-all">
+                        <i class="fal fa-angle-left"></i>
+                    </div>
+                </button>
+                <button
+                    id={technologyNavRightId}
+                    class="group button chamfer-sm disabled:pointer-events-none p-[1px] bg-red-600 disabled:bg-neutral-700 hover:bg-white"
+                    type="button"
+                    aria-label="Show more technologies"
+                    aria-controls={technologyCarouselId}
+                >
+                    <div class="button-inner bg-neutral-900 block w-[40px] h-[40px] chamfer-sm leading-[40px] text-red-600 group-hover:text-white group-disabled:text-neutral-700 transition-all">
+                        <i class="fal fa-angle-right"></i>
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div
+            id={technologyCarouselId}
+            class="overflow-hidden select-none"
+            data-technology-carousel
+            style="touch-action: pan-y;"
+        >
+            <div
+                class="flex w-full gap-8 transition-transform duration-500 ease-out"
+                data-technology-track
+            >
+                {technologies.map((technology) => (
+                    <div
+                        class="min-h-10 group w-full shrink-0 basis-full md:basis-[calc((100%-2rem)/2)] lg:basis-[calc((100%-4rem)/3)]"
+                        data-technology-item
+                    >
+                        <div class="bg-neutral-800 chamfer-lg md:h-full">
+                            <div class="overflow-hidden">
+                                <Image src={technology.image} alt={technology.alt} class="lg:group-hover:transform-[scale(1.07)] transition-all duration-450 pointer-events-none" />
+                            </div>
+                            <div class="p-4">
+                                <h4 class="text-red-600 mb-2">{technology.title}</h4>
+                                <p class="text-white mb-2">{technology.description}</p>
+                                <ul class="mb-2">
+                                    {technology.features.map((feature) => (
+                                        <li><i class="fal fa-caret-right pr-2 text-red-600"></i>{feature}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script define:vars={{ technologyCarouselId, technologyNavLeftId, technologyNavRightId }}>
+    const carousel = document.getElementById(technologyCarouselId);
+
+    if (carousel && carousel.dataset.initialized !== 'true') {
+        carousel.dataset.initialized = 'true';
+
+        const track = carousel.querySelector('[data-technology-track]');
+        const items = Array.from(carousel.querySelectorAll('[data-technology-item]'));
+        const previousButton = document.getElementById(technologyNavLeftId);
+        const nextButton = document.getElementById(technologyNavRightId);
+
+        if (track && previousButton && nextButton && items.length > 0) {
+            let currentIndex = 0;
+            let isDragging = false;
+            let pointerId = null;
+            let startX = 0;
+            let startY = 0;
+            let dragOffset = 0;
+
+            const getVisibleCount = () => {
+                if (window.matchMedia('(min-width: 1024px)').matches) {
+                    return 3;
+                }
+
+                if (window.matchMedia('(min-width: 768px)').matches) {
+                    return 2;
+                }
+
+                return 1;
+            };
+
+            const updateButtons = () => {
+                const visibleCount = getVisibleCount();
+                const maxIndex = Math.max(items.length - visibleCount, 0);
+
+                previousButton.disabled = currentIndex <= 0;
+                nextButton.disabled = currentIndex >= maxIndex;
+            };
+
+            const getOffsetForIndex = (index) => {
+                const item = items[index];
+                const firstItem = items[0];
+
+                if (!item || !firstItem) {
+                    return 0;
+                }
+
+                return item.offsetLeft - firstItem.offsetLeft;
+            };
+
+            const updateCarousel = () => {
+                const visibleCount = getVisibleCount();
+                const maxIndex = Math.max(items.length - visibleCount, 0);
+                currentIndex = Math.min(currentIndex, maxIndex);
+
+                const offset = getOffsetForIndex(currentIndex);
+                track.style.transition = '';
+                track.style.transform = `translateX(-${offset}px)`;
+
+                updateButtons();
+            };
+
+            const onPointerDown = (event) => {
+                if (event.button !== undefined && event.button !== 0) {
+                    return;
+                }
+
+                isDragging = true;
+                pointerId = event.pointerId;
+                startX = event.clientX;
+                startY = event.clientY;
+                dragOffset = 0;
+
+                carousel.setPointerCapture(pointerId);
+                track.style.transition = 'none';
+            };
+
+            const onPointerMove = (event) => {
+                if (!isDragging || event.pointerId !== pointerId) {
+                    return;
+                }
+
+                const deltaX = event.clientX - startX;
+                const deltaY = event.clientY - startY;
+
+                if (Math.abs(deltaX) > Math.abs(deltaY) && event.cancelable) {
+                    event.preventDefault();
+                }
+
+                dragOffset = deltaX;
+
+                const visibleCount = getVisibleCount();
+                const maxIndex = Math.max(items.length - visibleCount, 0);
+                const baseOffset = getOffsetForIndex(currentIndex);
+                const minTranslate = -(getOffsetForIndex(maxIndex));
+                const nextTranslate = Math.min(0, Math.max(-baseOffset + dragOffset, minTranslate));
+
+                track.style.transform = `translateX(${nextTranslate}px)`;
+            };
+
+            const onPointerEnd = (event) => {
+                if (!isDragging || event.pointerId !== pointerId) {
+                    return;
+                }
+
+                isDragging = false;
+                carousel.releasePointerCapture(pointerId);
+                pointerId = null;
+
+                const threshold = 50;
+                const step = getVisibleCount();
+                const visibleCount = getVisibleCount();
+                const maxIndex = Math.max(items.length - visibleCount, 0);
+
+                if (dragOffset <= -threshold) {
+                    currentIndex = Math.min(currentIndex + step, maxIndex);
+                } else if (dragOffset >= threshold) {
+                    currentIndex = Math.max(currentIndex - step, 0);
+                }
+
+                dragOffset = 0;
+                updateCarousel();
+            };
+
+            previousButton.addEventListener('click', () => {
+                const step = getVisibleCount();
+                currentIndex = Math.max(currentIndex - step, 0);
+                updateCarousel();
+            });
+
+            nextButton.addEventListener('click', () => {
+                const step = getVisibleCount();
+                const maxIndex = Math.max(items.length - step, 0);
+                currentIndex = Math.min(currentIndex + step, maxIndex);
+                updateCarousel();
+            });
+
+            carousel.addEventListener('pointerdown', onPointerDown);
+            carousel.addEventListener('pointermove', onPointerMove);
+            carousel.addEventListener('pointerup', onPointerEnd);
+            carousel.addEventListener('pointercancel', onPointerEnd);
+
+            window.addEventListener('resize', updateCarousel);
+            updateCarousel();
+        }
+    }
+</script>

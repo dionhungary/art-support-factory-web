@@ -1,0 +1,706 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
+const works = (await getCollection('works')).sort((a, b) => b.data.year - a.data.year);
+const worksCarouselId = `works-carousel-${crypto.randomUUID()}`;
+const worksWithDetails = works.map((work, index) => ({
+    ...work,
+    detailId: `${worksCarouselId}-details-${index}`,
+}));
+const worksClientData = worksWithDetails.map((work) => ({
+    description: work.data.description ?? '',
+    detailId: work.detailId,
+    gallery: work.data.gallery.map((image, imageIndex) => ({
+        alt: `${work.data.title} gallery image ${imageIndex + 1}`,
+        height: image.height,
+        src: image.src,
+        width: image.width,
+    })),
+    title: work.data.title,
+    year: String(work.data.year),
+}));
+const initialWork = worksClientData[0];
+---
+
+<section id="our-works" class="flex-col gap-8">
+    <div class="flex chamfer-sm items-center mb-6">
+        <h2 class="mb-0 flex-grow">Our Works</h2>
+        <div id="works-nav" class="flex gap-4">
+            <button
+                id="works-nav-left"
+                class="group button chamfer-sm disabled:pointer-events-none p-[1px] bg-red-600 disabled:bg-neutral-700 hover:bg-white"
+                type="button"
+                aria-label="Show previous works"
+                aria-controls={worksCarouselId}
+            >
+                <div class="button-inner bg-neutral-900 block w-[40px] h-[40px] chamfer-sm leading-[40px] text-red-600 group-hover:text-white group-disabled:text-neutral-700 transition-all">
+                    <i class="fal fa-angle-left"></i>
+                </div>
+            </button>
+            <button
+                id="works-nav-right"
+                class="group button chamfer-sm disabled:pointer-events-none p-[1px] bg-red-600 disabled:bg-neutral-700 hover:bg-white"
+                type="button"
+                aria-label="Show more works"
+                aria-controls={worksCarouselId}
+            >
+                <div class="button-inner bg-neutral-900 block w-[40px] h-[40px] chamfer-sm leading-[40px] text-red-600 group-hover:text-white group-disabled:text-neutral-700 transition-all">
+                    <i class="fal fa-angle-right"></i>
+                </div>
+            </button>
+        </div>
+    </div>
+    <div
+        id={worksCarouselId}
+        class="overflow-hidden select-none"
+        data-works-carousel
+        style="touch-action: pan-y;"
+    >
+        <div
+            class="flex gap-8 transition-transform duration-500 ease-out"
+            data-works-track
+        >
+            {worksWithDetails.map((work) => (
+                <div
+                    class="group flex flex-col justify-end items-start work-cover chamfer-lg p-4 aspect-3/4 relative shrink-0 basis-full md:basis-[calc((100%-2rem)/2)] lg:basis-[calc((100%-4rem)/3)]"
+                    data-works-item
+                >
+                    <h5 class="mb-0">{work.data.year}</h5>
+                    <h4>{work.data.title}</h4>
+                    <a
+                        class="button chamfer-sm"
+                        href={`#${work.detailId}`}
+                        data-work-details-link
+                        data-work-details-target={work.detailId}
+                    >
+                        More
+                    </a>
+                    <Image
+                        src={work.data.cover}
+                        alt={work.data.title}
+                        class="absolute w-full h-full object-cover top-[50%] left-[50%] transform-[translate(-50%,-50%)] -z-1 transition-all duration-450 lg:group-hover:transform-[translate(-50%,-50%)scale(1.1)] pointer-events-none"
+                    />
+                </div>
+            ))}
+        </div>
+    </div>
+    <div
+        class="overflow-hidden opacity-0 pointer-events-none transition-all duration-300 ease-out"
+        data-work-details
+        hidden
+        aria-hidden="true"
+        style="height: 0;"
+    >
+        <div class="chamfer-lg bg-neutral-800 p-6 mt-8" data-work-details-inner>
+            <div class="relative" data-work-details-stage>
+                <div
+                    class="flex flex-col md:flex-row gap-4 md:gap-8 opacity-100 transition-opacity duration-200 ease-out relative z-0"
+                    data-work-details-content
+                >
+                    <div class="w-full flex-grow">
+                        <a href="#" data-work-details-close aria-label="Close work details" class="block w-[25px] h-[25px] leading-[25px] text-center mb-4"><i class="fal fa-times text-2xl"></i></a>
+                        <h2 data-work-title class="mb-0">{initialWork.title}</h2>
+                        <h4 class="text-red-600" data-work-year>{initialWork.year}</h4>
+                        <p data-work-description>{initialWork.description}</p>
+                    </div>
+                    <div class="w-full flex-grow">
+                        <div class="chamfer-md">
+                            <div
+                                class="relative overflow-hidden flex flex-col aspect-3/2 w-full chamfer-md"
+                                data-work-gallery-slider
+                            >
+                                <div class="absolute inset-0 z-0" data-work-gallery-track>
+                                    {initialWork.gallery.map((slide, index) => (
+                                        <img
+                                            src={slide.src}
+                                            alt={slide.alt}
+                                            width={slide.width}
+                                            height={slide.height}
+                                            class="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-in-out"
+                                            data-work-gallery-slide
+                                            data-slide-index={index}
+                                            loading={index === 0 ? 'eager' : 'lazy'}
+                                            aria-hidden={index === 0 ? 'false' : 'true'}
+                                            style={`opacity: ${index === 0 ? '1' : '0'};`}
+                                        />
+                                    ))}
+                                </div>
+                                <div
+                                    class="absolute bottom-4 z-2 flex w-full justify-center"
+                                    data-work-gallery-nav
+                                    hidden={initialWork.gallery.length <= 1}
+                                >
+                                    {initialWork.gallery.map((slide, index) => (
+                                        <div
+                                            class="h-[10px] w-[10px] cursor-pointer bg-red-600 transition-all hover:bg-white mx-[5px]"
+                                            data-work-gallery-nav-item
+                                            data-slide-index={index}
+                                            role="button"
+                                            tabindex="0"
+                                            aria-label={slide.alt}
+                                            aria-pressed={index === 0 ? 'true' : 'false'}
+                                            style={`background: ${index === 0 ? 'white' : ''};`}
+                                        ></div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script define:vars={{ worksCarouselId, worksClientData }}>
+    const carousel = document.getElementById(worksCarouselId);
+
+    if (carousel && carousel.dataset.initialized !== 'true') {
+        carousel.dataset.initialized = 'true';
+
+        const track = carousel.querySelector('[data-works-track]');
+        const items = Array.from(carousel.querySelectorAll('[data-works-item]'));
+        const previousButton = document.getElementById('works-nav-left');
+        const nextButton = document.getElementById('works-nav-right');
+        const details = carousel.parentElement
+            ? carousel.parentElement.querySelector('[data-work-details]')
+            : null;
+        const detailsInner = details
+            ? details.querySelector('[data-work-details-inner]')
+            : null;
+        const detailsStage = details
+            ? details.querySelector('[data-work-details-stage]')
+            : null;
+        const detailsContent = details
+            ? details.querySelector('[data-work-details-content]')
+            : null;
+        const detailsTitle = details
+            ? details.querySelector('[data-work-title]')
+            : null;
+        const detailsYear = details
+            ? details.querySelector('[data-work-year]')
+            : null;
+        const detailsDescription = details
+            ? details.querySelector('[data-work-description]')
+            : null;
+        const galleryTrack = details
+            ? details.querySelector('[data-work-gallery-track]')
+            : null;
+        const galleryNav = details
+            ? details.querySelector('[data-work-gallery-nav]')
+            : null;
+        const detailLinks = Array.from(carousel.querySelectorAll('[data-work-details-link]'));
+        const closeButton = details
+            ? details.querySelector('[data-work-details-close]')
+            : null;
+        const worksById = worksClientData.reduce((result, work) => {
+            result[work.detailId] = work;
+            return result;
+        }, {});
+        const detailsAnimationDurationMs = 300;
+        const detailsCrossfadeDurationMs = 200;
+        const galleryIntervalMs = 3000;
+
+        let detailsAnimationTimeoutId = null;
+        let detailsCrossfadeTimeoutId = null;
+        let detailsTransitionToken = 0;
+        let galleryRotationId = null;
+        let gallerySlides = [];
+        let galleryNavItems = [];
+        let galleryActiveIndex = 0;
+        let currentDetailId = worksClientData.length > 0 ? worksClientData[0].detailId : null;
+
+        const setActiveGallerySlide = (nextIndex) => {
+            galleryActiveIndex = nextIndex;
+
+            gallerySlides.forEach((slide, index) => {
+                const isActive = index === galleryActiveIndex;
+                slide.style.opacity = isActive ? '1' : '0';
+                slide.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+            });
+
+            galleryNavItems.forEach((navItem, index) => {
+                const isActive = index === galleryActiveIndex;
+                navItem.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+                navItem.style.background = isActive ? 'white' : '';
+            });
+        };
+
+        const stopGalleryRotation = () => {
+            if (galleryRotationId !== null) {
+                window.clearInterval(galleryRotationId);
+                galleryRotationId = null;
+            }
+        };
+
+        const startGalleryRotation = () => {
+            stopGalleryRotation();
+
+            if (gallerySlides.length <= 1) {
+                return;
+            }
+
+            galleryRotationId = window.setInterval(() => {
+                const nextIndex = (galleryActiveIndex + 1) % gallerySlides.length;
+                setActiveGallerySlide(nextIndex);
+            }, galleryIntervalMs);
+        };
+
+        const renderGallery = (slides) => {
+            if (!galleryTrack || !galleryNav) {
+                return;
+            }
+
+            stopGalleryRotation();
+            galleryTrack.innerHTML = '';
+            galleryNav.innerHTML = '';
+
+            slides.forEach((slide, index) => {
+                const image = document.createElement('img');
+                image.src = slide.src;
+                image.alt = slide.alt;
+                image.width = slide.width;
+                image.height = slide.height;
+                image.className = 'absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-in-out';
+                image.dataset.workGallerySlide = '';
+                image.dataset.slideIndex = String(index);
+                image.loading = index === 0 ? 'eager' : 'lazy';
+                image.setAttribute('aria-hidden', index === 0 ? 'false' : 'true');
+                image.style.opacity = index === 0 ? '1' : '0';
+                galleryTrack.appendChild(image);
+
+                if (slides.length > 1) {
+                    const navItem = document.createElement('div');
+                    navItem.className = 'h-[10px] w-[10px] cursor-pointer bg-red-600 transition-all hover:bg-white mx-[5px]';
+                    navItem.dataset.workGalleryNavItem = '';
+                    navItem.dataset.slideIndex = String(index);
+                    navItem.setAttribute('role', 'button');
+                    navItem.setAttribute('tabindex', '0');
+                    navItem.setAttribute('aria-label', slide.alt);
+                    navItem.setAttribute('aria-pressed', index === 0 ? 'true' : 'false');
+
+                    if (index === 0) {
+                        navItem.style.background = 'white';
+                    }
+
+                    navItem.addEventListener('click', () => {
+                        setActiveGallerySlide(index);
+                        startGalleryRotation();
+                    });
+
+                    navItem.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            setActiveGallerySlide(index);
+                            startGalleryRotation();
+                        }
+                    });
+
+                    galleryNav.appendChild(navItem);
+                }
+            });
+
+            gallerySlides = Array.from(galleryTrack.querySelectorAll('[data-work-gallery-slide]'));
+            galleryNavItems = Array.from(galleryNav.querySelectorAll('[data-work-gallery-nav-item]'));
+            galleryActiveIndex = 0;
+            galleryNav.hidden = slides.length <= 1;
+            setActiveGallerySlide(0);
+            startGalleryRotation();
+        };
+
+        const renderDetails = (panelId) => {
+            const work = worksById[panelId];
+
+            if (!work || !detailsTitle || !detailsYear || !detailsDescription) {
+                return false;
+            }
+
+            detailsTitle.textContent = work.title;
+            detailsYear.textContent = work.year;
+            detailsDescription.textContent = work.description;
+            renderGallery(work.gallery);
+            currentDetailId = work.detailId;
+
+            return true;
+        };
+
+        const preloadWork = (panelId) => {
+            const work = worksById[panelId];
+            const firstSlide = work && work.gallery.length > 0
+                ? work.gallery[0]
+                : null;
+
+            if (!firstSlide || !firstSlide.src) {
+                return Promise.resolve();
+            }
+
+            return new Promise((resolve) => {
+                const image = new window.Image();
+
+                const finalize = () => resolve();
+
+                image.onload = finalize;
+                image.onerror = finalize;
+                image.src = firstSlide.src;
+
+                if (image.complete) {
+                    resolve();
+                }
+            });
+        };
+
+        const finishDetailsAnimation = (callback) => {
+            if (detailsAnimationTimeoutId !== null) {
+                window.clearTimeout(detailsAnimationTimeoutId);
+            }
+
+            detailsAnimationTimeoutId = window.setTimeout(() => {
+                detailsAnimationTimeoutId = null;
+                callback();
+            }, detailsAnimationDurationMs);
+        };
+
+        const getDetailsTargetHeight = () => {
+            if (!detailsInner) {
+                return 0;
+            }
+
+            const innerStyles = window.getComputedStyle(detailsInner);
+            const marginTop = Number.parseFloat(innerStyles.marginTop) || 0;
+            const marginBottom = Number.parseFloat(innerStyles.marginBottom) || 0;
+
+            return detailsInner.getBoundingClientRect().height + marginTop + marginBottom;
+        };
+
+        const openDetails = (panelId) => {
+            if (!details || !detailsInner || !detailsContent) {
+                return;
+            }
+
+            if (!renderDetails(panelId)) {
+                return;
+            }
+
+            const startingHeight = details.hidden
+                ? 0
+                : details.getBoundingClientRect().height;
+
+            details.hidden = false;
+            details.setAttribute('aria-hidden', 'false');
+            details.style.pointerEvents = 'none';
+            details.style.height = `${startingHeight}px`;
+            details.style.opacity = startingHeight === 0 ? '0' : '1';
+            detailsContent.style.opacity = '1';
+
+            window.requestAnimationFrame(() => {
+                details.style.height = `${getDetailsTargetHeight()}px`;
+                details.style.opacity = '1';
+            });
+
+            finishDetailsAnimation(() => {
+                if (!details.hidden) {
+                    details.style.height = 'auto';
+                    details.style.opacity = '1';
+                    details.style.pointerEvents = 'auto';
+                }
+            });
+        };
+
+        const crossfadeDetails = (panelId) => {
+            if (!details || !detailsInner || !detailsStage || !detailsContent) {
+                return;
+            }
+
+            if (details.hidden) {
+                openDetails(panelId);
+                return;
+            }
+
+            if (currentDetailId === panelId) {
+                return;
+            }
+
+            details.style.pointerEvents = 'none';
+
+            if (detailsCrossfadeTimeoutId !== null) {
+                window.clearTimeout(detailsCrossfadeTimeoutId);
+                detailsCrossfadeTimeoutId = null;
+            }
+
+            detailsTransitionToken += 1;
+            const transitionToken = detailsTransitionToken;
+
+            Array.from(detailsStage.querySelectorAll('[data-work-details-overlay]')).forEach((overlayNode) => {
+                overlayNode.remove();
+            });
+
+            const overlay = detailsContent.cloneNode(true);
+            const overlayBaseClassName = detailsContent.className
+                .replace(/\brelative\b/g, '')
+                .replace(/\bz-0\b/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+            overlay.className = `${overlayBaseClassName} absolute inset-0 z-10 pointer-events-none`;
+            overlay.dataset.workDetailsOverlay = 'true';
+            overlay.setAttribute('aria-hidden', 'true');
+            overlay.style.opacity = '1';
+            detailsStage.appendChild(overlay);
+
+            const startingHeight = details.getBoundingClientRect().height;
+            details.style.height = `${startingHeight}px`;
+
+            preloadWork(panelId).then(() => {
+                if (transitionToken !== detailsTransitionToken) {
+                    return;
+                }
+
+                if (!renderDetails(panelId)) {
+                    if (overlay.parentNode) {
+                        overlay.parentNode.removeChild(overlay);
+                    }
+                    details.style.pointerEvents = 'auto';
+                    return;
+                }
+
+            detailsContent.style.opacity = '1';
+
+            window.requestAnimationFrame(() => {
+                details.style.height = `${getDetailsTargetHeight()}px`;
+                overlay.style.opacity = '0';
+            });
+
+                detailsCrossfadeTimeoutId = window.setTimeout(() => {
+                    detailsCrossfadeTimeoutId = null;
+
+                    if (overlay.parentNode) {
+                        overlay.parentNode.removeChild(overlay);
+                    }
+
+                    if (!details.hidden) {
+                        details.style.height = 'auto';
+                        details.style.pointerEvents = 'auto';
+                    }
+                }, detailsCrossfadeDurationMs);
+            });
+        };
+
+        const closeDetails = () => {
+            if (!details || details.hidden) {
+                return;
+            }
+
+            if (detailsCrossfadeTimeoutId !== null) {
+                window.clearTimeout(detailsCrossfadeTimeoutId);
+                detailsCrossfadeTimeoutId = null;
+            }
+
+            details.style.height = `${details.getBoundingClientRect().height}px`;
+            details.style.opacity = '1';
+            details.style.pointerEvents = 'none';
+
+            window.requestAnimationFrame(() => {
+                details.style.height = '0px';
+                details.style.opacity = '0';
+            });
+
+            finishDetailsAnimation(() => {
+                details.hidden = true;
+                details.setAttribute('aria-hidden', 'true');
+                details.style.height = '0px';
+                details.style.opacity = '0';
+                details.style.pointerEvents = 'none';
+            });
+        };
+
+        if (worksClientData.length > 0) {
+            renderGallery(worksClientData[0].gallery);
+        }
+
+        detailLinks.forEach((link) => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+
+                const panelId = link.dataset.workDetailsTarget;
+
+                if (!panelId) {
+                    return;
+                }
+
+                crossfadeDetails(panelId);
+            });
+        });
+
+        if (closeButton) {
+            closeButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                closeDetails();
+            });
+        }
+
+        if (window.location.hash) {
+            const initialDetailId = window.location.hash.slice(1);
+
+            if (worksById[initialDetailId]) {
+                openDetails(initialDetailId);
+            }
+        }
+
+        if (track && previousButton && nextButton && items.length > 0) {
+            let currentIndex = 0;
+            let isDragging = false;
+            let pointerId = null;
+            let startX = 0;
+            let startY = 0;
+            let dragOffset = 0;
+            let suppressClick = false;
+
+            const getVisibleCount = () => {
+                if (window.matchMedia('(min-width: 1024px)').matches) {
+                    return 3;
+                }
+
+                if (window.matchMedia('(min-width: 768px)').matches) {
+                    return 2;
+                }
+
+                return 1;
+            };
+
+            const updateButtons = () => {
+                const visibleCount = getVisibleCount();
+                const maxIndex = Math.max(items.length - visibleCount, 0);
+
+                previousButton.disabled = currentIndex <= 0;
+                nextButton.disabled = currentIndex >= maxIndex;
+            };
+
+            const getOffsetForIndex = (index) => {
+                const item = items[index];
+                const firstItem = items[0];
+
+                if (!item || !firstItem) {
+                    return 0;
+                }
+
+                return item.offsetLeft - firstItem.offsetLeft;
+            };
+
+            const updateCarousel = () => {
+                const visibleCount = getVisibleCount();
+                const maxIndex = Math.max(items.length - visibleCount, 0);
+                currentIndex = Math.min(currentIndex, maxIndex);
+
+                const offset = getOffsetForIndex(currentIndex);
+                track.style.transition = '';
+                track.style.transform = `translateX(-${offset}px)`;
+
+                updateButtons();
+            };
+
+            const onPointerDown = (event) => {
+                if (event.button !== undefined && event.button !== 0) {
+                    return;
+                }
+
+                const target = event.target;
+
+                if (
+                    target instanceof Element &&
+                    target.closest('a, button, input, select, textarea, label')
+                ) {
+                    return;
+                }
+
+                isDragging = true;
+                pointerId = event.pointerId;
+                startX = event.clientX;
+                startY = event.clientY;
+                dragOffset = 0;
+                suppressClick = false;
+
+                carousel.setPointerCapture(pointerId);
+                track.style.transition = 'none';
+            };
+
+            const onPointerMove = (event) => {
+                if (!isDragging || event.pointerId !== pointerId) {
+                    return;
+                }
+
+                const deltaX = event.clientX - startX;
+                const deltaY = event.clientY - startY;
+
+                if (Math.abs(deltaX) > Math.abs(deltaY) && event.cancelable) {
+                    event.preventDefault();
+                }
+
+                dragOffset = deltaX;
+                suppressClick = suppressClick || Math.abs(dragOffset) > 10;
+
+                const visibleCount = getVisibleCount();
+                const maxIndex = Math.max(items.length - visibleCount, 0);
+                const baseOffset = getOffsetForIndex(currentIndex);
+                const minTranslate = -(getOffsetForIndex(maxIndex));
+                const nextTranslate = Math.min(0, Math.max(-baseOffset + dragOffset, minTranslate));
+
+                track.style.transform = `translateX(${nextTranslate}px)`;
+            };
+
+            const onPointerEnd = (event) => {
+                if (!isDragging || event.pointerId !== pointerId) {
+                    return;
+                }
+
+                isDragging = false;
+                carousel.releasePointerCapture(pointerId);
+                pointerId = null;
+
+                const threshold = 50;
+                const step = getVisibleCount();
+                const visibleCount = getVisibleCount();
+                const maxIndex = Math.max(items.length - visibleCount, 0);
+
+                if (dragOffset <= -threshold) {
+                    currentIndex = Math.min(currentIndex + step, maxIndex);
+                } else if (dragOffset >= threshold) {
+                    currentIndex = Math.max(currentIndex - step, 0);
+                }
+
+                dragOffset = 0;
+                updateCarousel();
+            };
+
+            previousButton.addEventListener('click', () => {
+                const step = getVisibleCount();
+                currentIndex = Math.max(currentIndex - step, 0);
+                updateCarousel();
+            });
+
+            nextButton.addEventListener('click', () => {
+                const step = getVisibleCount();
+                const maxIndex = Math.max(items.length - step, 0);
+                currentIndex = Math.min(currentIndex + step, maxIndex);
+                updateCarousel();
+            });
+
+            track.addEventListener('click', (event) => {
+                if (!suppressClick) {
+                    return;
+                }
+
+                event.preventDefault();
+                event.stopPropagation();
+                suppressClick = false;
+            }, true);
+
+            carousel.addEventListener('pointerdown', onPointerDown);
+            carousel.addEventListener('pointermove', onPointerMove);
+            carousel.addEventListener('pointerup', onPointerEnd);
+            carousel.addEventListener('pointercancel', onPointerEnd);
+
+            window.addEventListener('resize', updateCarousel);
+            updateCarousel();
+        }
+    }
+</script>

@@ -1,0 +1,55 @@
+---
+import LogoEmblem from '../assets/logo_emblem.svg'
+import LogoWormark from '../assets/logo_wordmark.svg'
+
+const menuItems = [
+    {label: "About us", href: "/#about-us" },
+    {label: "Our works", href: "/#our-works" },
+    {label: "Technology", href: "/#technology" },
+    {label: "Contact", href: "/#contact" }
+]
+
+const closeMobileMenu = "document.getElementById('hamburger-menu')?.classList.remove('open'); document.getElementById('mobile-menu')?.setAttribute('data-state', 'closed')"
+---
+<header class="w-full flex py-3 sticky top-0 bg-neutral-900 z-1 items-center">
+    <a href="/" id="site-logo" class="flex group">
+        <LogoEmblem id="emblem" src="/src/logo_emblem.svg" alt="ASF Logo" class="h-[30px] transition-all duration-400 group-hover:transform-[rotateY(180deg)]" />
+        <LogoWormark id="wordmark" src="/src/logo_wordmark.svg" alt="ASF Logo" class="h-[30px]" />
+    </a>
+    <div id="menu-wrapper" class="flex flex-grow justify-end">
+        <ul id="desktop-menu" class="hidden lg:flex  items-center">
+            {menuItems.map((item) => (
+            <li class="menu-item mx-4 uppercase text-sm tracking-widest font-bold"><a href={item.href}>{item.label}</a></li>
+            ))}
+            <li class="ml-4 mr-0 text-xl">
+                <a href="https://www.instagram.com/artsupportfactory" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </li>
+        </ul>
+        <a
+            href="#"
+            id="hamburger-menu"
+            class="flex group lg:hidden"
+            onclick="event.preventDefault(); this.classList.toggle('open'); document.getElementById('mobile-menu')?.setAttribute('data-state', this.classList.contains('open') ? 'open' : 'closed')"
+        >
+            <div class="w-[30px] h-[30px] block relative">
+                <div id="hamburger-line-1" class="w-[20px] h-[1px] bg-white absolute left-[50%] top-[50%] transition-all transform-[translate(-50%,calc(-50%-5px))] group-[.open]:transform-[translate(-50%,-50%)rotateZ(45deg)]"></div>
+                <div id="hamburger-line-2" class="w-[20px] h-[1px] bg-white absolute left-[50%] top-[50%] transition-all transform-[translate(-50%,-50%)] group-[.open]:opacity-0"></div>
+                <div id="hamburger-line-3" class="w-[20px] h-[1px] bg-white absolute left-[50%] top-[50%] transition-all transform-[translate(-50%,calc(-50%+5px))] group-[.open]:transform-[translate(-50%,-50%)rotateZ(-45deg)]"></div>
+            </div>
+        </a>
+        <div id="mobile-menu" data-state="closed" class="grid grid-rows-[0fr] lg:hidden fixed left-0 top-[54px] w-full bg-neutral-800 transition-all data-[state=open]:grid-rows-[1fr] shadow-lg" style="clip-path:polygon(0 0,100% 0,100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%)">
+            <ul class="overflow-hidden flex flex-col items-center">
+                {menuItems.map((item) => (
+                <li class="menu-item first:mt-2 uppercase tracking-widest text-sm py-2"><a href={item.href} onclick={closeMobileMenu}>{item.label}</a></li>
+                ))}
+                <li class="menu-item mb-2 py-2 uppercase">
+                    <a href="https://www.instagram.com/artsupportfactory" target="_blank" class="tracking-widest text-sm">
+                        <i class="fab fa-instagram text-base"></i> Instagram
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>

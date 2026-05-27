@@ -1,0 +1,46 @@
+---
+import { Image } from 'astro:assets';
+import ExperienceIcon from '../assets/icon_experience.svg';
+import ProjectsIcon from '../assets/icon_projects.svg';
+import ClientsIcon from '../assets/icon_clients.svg';
+import CountriesIcon from '../assets/icon_countries.svg';
+---
+
+<section class="grid gap-4 sm:gap-8 grid-cols-2 lg:grid-cols-4">
+    <div class="feature-card-wrapper perspective-normal w-full transition-all lg:hover:transform-[translateY(-10px)]">
+        <div class="feature-card flex flex-col sm:flex-row feature chamfer-md p-4 bg-neutral-800 items-center h-full">
+            <Image src={ExperienceIcon} alt="Experience icon" class="w-[100px] mr-0 sm:mr-4"/>
+            <div class="w-full text-center sm:text-left mt-2 sm:mt-0">
+                <h2 class="text-red-600 mb-0">25+</h2>
+                <p class="mb-0">years of work experience</p>
+            </div>
+        </div>
+    </div>
+    <div class="feature-card-wrapper perspective-normal w-full transition-all lg:hover:transform-[translateY(-10px)]">
+        <div class="feature-card flex flex-col sm:flex-row feature chamfer-md p-4 bg-neutral-800 items-center h-full">
+            <Image src={ProjectsIcon} alt="Projects icon" class="w-[100px] mr-0 sm:mr-4"/>
+            <div class="w-full text-center sm:text-left mt-2 sm:mt-0">
+                <h2 class="text-red-600 mb-0">150+</h2>
+                <p class="mb-0">successful projects</p>
+            </div>
+        </div>
+    </div>
+    <div class="feature-card-wrapper perspective-normal w-full transition-all lg:hover:transform-[translateY(-10px)]">
+        <div class="feature-card flex flex-col sm:flex-row feature chamfer-md p-4 bg-neutral-800 items-center h-full">
+            <Image src={ClientsIcon} alt="Clients icon" class="w-[100px] mr-0 sm:mr-4"/>
+            <div class="w-full text-center sm:text-left mt-2 sm:mt-0">
+                <h2 class="text-red-600 mb-0">45+</h2>
+                <p class="mb-0">satisfied clients over the years</p>
+            </div>
+        </div>
+    </div>
+    <div class="feature-card-wrapper perspective-normal w-full transition-all lg:hover:transform-[translateY(-10px)]">
+        <div class="feature-card flex flex-col sm:flex-row feature chamfer-md p-4 bg-neutral-800 items-center h-full">
+            <Image src={CountriesIcon} alt="Countries icon" class="w-[100px] mr-0 sm:mr-4"/>
+            <div class="w-full text-center sm:text-left mt-2 sm:mt-0">
+                <h2 class="text-red-600 mb-0">6</h2>
+                <p class="mb-0">countries in the CEE region</p>
+            </div>
+        </div>
+    </div>
+</section>

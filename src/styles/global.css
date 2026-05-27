@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+@theme {
+    
+}
+
+@font-face {    
+    src: url('./webfonts/ElevonOneG.ttf');
+    font-family: 'ElevonOneG';
+    font-weight: 400;
+}
+
+@font-face {    
+    src: url('./webfonts/Blinker-Regular.ttf');
+    font-family: 'Blinker';
+    font-weight: 400;
+}
+
+@font-face {    
+    src: url('./webfonts/Blinker-Bold.ttf');
+    font-family: 'Blinker';
+    font-weight: 700;
+}
+
+@layer base {
+    :where(h1, h2, h3, h4, h5) {
+        @apply uppercase text-white mb-4;
+        font-family: 'ElevonOneG', monospace;
+    }    
+
+    :where(p) {
+        @apply mb-4;
+    }
+
+    
+    :where(button, .button) {
+        @apply bg-red-600 inline-block px-4 py-2 uppercase font-bold text-white hover:bg-white text-sm tracking-widest transition-all cursor-pointer;
+        font-family: 'ElevonOneG', monospace;
+    }    
+
+}
+
+html, body {
+    @apply text-neutral-400;
+    font-family: 'Blinker', sans-serif;
+    scroll-behavior: smooth;
+}
+
+button, .button {
+    @apply text-white hover:text-neutral-900;
+} 
+
+section {    
+    @apply pb-8 md:pb-14 scroll-mt-16;
+}
+
+h1 {
+    @apply text-3xl md:text-4xl;
+}
+
+h2 {
+    @apply text-2xl md:text-3xl;
+}
+
+h3 {
+    @apply text-xl md:text-2xl;
+}
+
+h4 {
+    @apply text-lg md:text-xl;
+}
+
+h5 {
+    @apply text-base md:text-lg;
+}
+
+a, a * {
+    @apply hover:text-white transition-all;
+}
+
+.chamfer-sm {
+    clip-path: polygon(
+        10px 0,
+        100% 0,
+        100% calc(100% - 10px),
+        calc(100% - 10px) 100%,
+        0 100%,
+        0 10px
+    );
+}
+
+.chamfer-md {
+    clip-path: polygon(
+        20px 0,
+        100% 0,
+        100% calc(100% - 20px),
+        calc(100% - 20px) 100%,
+        0 100%,
+        0 20px
+    );
+}
+
+.chamfer-lg {
+    clip-path: polygon(
+        30px 0,
+        100% 0,
+        100% calc(100% - 30px),
+        calc(100% - 30px) 100%,
+        0 100%,
+        0 30px
+    );
+}
+
+.chamfer-xl {
+    clip-path: polygon(
+        40px 0,
+        100% 0,
+        100% calc(100% - 40px),
+        calc(100% - 40px) 100%,
+        0 100%,
+        0 40px
+    );
+}
+
+#desktop-menu .menu-item,
+#mobile-menu .menu-item {
+    font-family: 'ElevonOneG', monospace;
+}
+
+#mobile-menu .menu-item {
+    @apply: text-sm tracking-widest;
+}

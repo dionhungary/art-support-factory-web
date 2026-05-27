@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Réteg_1" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 128">
+  <!-- Generator: Adobe Illustrator 30.4.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 226)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: url(#Névtelen_színátmenet_4);
+      }
+
+      .st1 {
+        fill: url(#Névtelen_színátmenet_5);
+      }
+
+      .st2 {
+        fill: url(#Névtelen_színátmenet);
+      }
+    </style>
+    <linearGradient id="Névtelen_színátmenet" data-name="Névtelen színátmenet" x1="64" y1="1276.86" x2="64" y2="1387.7" gradientTransform="translate(0 -1267.8898)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fdeff2"/>
+      <stop offset="1" stop-color="#f9cad0"/>
+    </linearGradient>
+    <linearGradient id="Névtelen_színátmenet_4" data-name="Névtelen színátmenet 4" x1="32" y1="1276.86" x2="32" y2="1387.7" gradientTransform="translate(0 -1267.8898)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e83e52"/>
+      <stop offset="1" stop-color="#e52329"/>
+    </linearGradient>
+    <linearGradient id="Névtelen_színátmenet_5" data-name="Névtelen színátmenet 5" x1="0" y1="1369.23" x2="128" y2="1369.23" gradientTransform="translate(0 -1267.8898)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d01317"/>
+      <stop offset="1" stop-color="#d51116"/>
+    </linearGradient>
+  </defs>
+  <polygon class="st2" points="0 119.81 64 8.97 128 119.81 0 119.81"/>
+  <polygon class="st0" points="64 82.86 0 119.81 64 8.97 64 82.86"/>
+  <polygon class="st1" points="64 82.86 128 119.81 0 119.81 64 82.86"/>
+</svg>

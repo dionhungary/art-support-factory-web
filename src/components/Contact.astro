@@ -1,0 +1,74 @@
+---
+import { Image } from 'astro:assets'
+import ContactPhoto1 from '../assets/contact_david_hajdu.jpg'
+import ContactPhoto2 from '../assets/contact_daniel_panti.jpg'
+---
+
+<section id="contact">
+    <div class="flex flex-col flex-grow items-center">
+        <h2 class="w-full text-center">Contact</h2>
+        <p class="max-w-xl text-center mb-8">If you have any questions or would like to bring your project to life with us, feel free to contact us through one of the channels below.</p>
+        <div class="flex flex-col lg:flex-row w-full gap-8 max-w-4xl items-center">
+            <div class="flex flex-col sm:flex-row gap-4 w-full max-w-150 chamfer-md bg-neutral-800 p-4 items-start">
+                <Image src={ContactPhoto1} alt="Dávid Hajdu" class="w-[130px] h-[130px] chamfer-sm hidden sm:block"/>
+                <div class="flex gap-4 w-full">
+                    <div class="flex-grow w-full">
+                        <h4 class="text-red-600 mb-0">Dávid Hajdu</h4>
+                        <p class="text-white uppercase mb-2">Operations Manager</p>
+                        <ul class="list-none mb-4">
+                            <li><a href="mailto:david@artsupportfactory.hu"><i class="fal fa-envelope-open mr-2 text-red-600"></i>david@artsupportfactory.hu</a></li>
+                            <li><a href="tel:+36 20 315 2572"><i class="fal fa-phone mr-2 text-red-600"></i>+36 20 315 2572</a></li>
+                        </ul>
+                        <div class="hidden sm:flex gap-4">
+                            <a href="mailto:david@artsupportfactory.hu" class="group chamfer-sm button text-center flex-grow p-[1px]">
+                                <div class="button-inner bg-neutral-800 px-4 py-2 chamfer-sm text-red-600 group-hover:text-white transition-all">Message</div>
+                            </a>
+                            <a href="tel:+36 20 315 2572" class="group chamfer-sm button text-center flex-grow p-[1px]">
+                                <div class="button-inner bg-neutral-800 px-4 py-2 chamfer-sm text-red-600 group-hover:text-white transition-all">Call</div>
+                            </a>
+                        </div>
+                    </div>
+                    <Image src={ContactPhoto1} alt="Dávid Hajdu" class="w-[80px] h-[80px] chamfer-sm block sm:hidden"/>
+                </div>
+                <div class="flex sm:hidden gap-4">
+                    <a href="mailto:david@artsupportfactory.hu" class="group chamfer-sm button text-center flex-grow p-[1px]">
+                        <div class="button-inner bg-neutral-800 px-4 py-2 chamfer-sm text-red-600 group-hover:text-white transition-all">Message</div>
+                    </a>
+                    <a href="tel:+36 20 315 2572" class="group chamfer-sm button text-center flex-grow p-[1px]">
+                        <div class="button-inner bg-neutral-800 px-4 py-2 chamfer-sm text-red-600 group-hover:text-white transition-all">Call</div>
+                    </a>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 w-full max-w-150 chamfer-md bg-neutral-800 p-4 items-start">
+                <Image src={ContactPhoto2} alt="Dániel Pánti" class="w-[130px] h-[130px] chamfer-sm hidden sm:block"/>
+                <div class="flex gap-4 w-full">
+                    <div class="flex-grow w-full">
+                        <h4 class="text-red-600 mb-0">Dániel Pánti</h4>
+                        <p class="text-white uppercase mb-2">Project Coordination</p>
+                        <ul class="list-none mb-4">
+                            <li><a href="mailto:info@artsupportfactory.hu"><i class="fal fa-envelope-open mr-2 text-red-600"></i>info@artsupportfactory.hu</a></li>
+                            <li><a href="tel:+36 30 650 3622"><i class="fal fa-phone mr-2 text-red-600"></i>+36 30 650 3622</a></li>
+                        </ul>
+                        <div class="hidden sm:flex gap-4">
+                            <a href="mailto:info@artsupportfactory.hu" class="group chamfer-sm button text-center flex-grow p-[1px]">
+                                <div class="button-inner bg-neutral-800 px-4 py-2 chamfer-sm text-red-600 group-hover:text-white transition-all">Message</div>
+                            </a>
+                            <a href="tel:+36 30 650 3622" class="group chamfer-sm button text-center flex-grow p-[1px]">
+                                <div class="button-inner bg-neutral-800 px-4 py-2 chamfer-sm text-red-600 group-hover:text-white transition-all">Call</div>
+                            </a>
+                        </div>
+                    </div>
+                    <Image src={ContactPhoto2} alt="Dániel Pánti" class="w-[80px] h-[80px] chamfer-sm block sm:hidden"/>
+                </div>
+                <div class="flex sm:hidden gap-4">
+                    <a href="mailto:info@artsupportfactory.hu" class="group chamfer-sm button text-center flex-grow p-[1px]">
+                        <div class="button-inner bg-neutral-800 px-4 py-2 chamfer-sm text-red-600 group-hover:text-white transition-all">Message</div>
+                    </a>
+                    <a href="tel:+36 30 650 3622" class="group chamfer-sm button text-center flex-grow p-[1px]">
+                        <div class="button-inner bg-neutral-800 px-4 py-2 chamfer-sm text-red-600 group-hover:text-white transition-all">Call</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
